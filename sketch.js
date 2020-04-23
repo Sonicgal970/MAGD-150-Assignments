@@ -1,61 +1,42 @@
-let fishes = []; //creates the array of multiple fish
+let crystal;
+let rainbowC;
+let cSound;
+let lGlow;
+let reverb;
 
+function preload(){
+  crystal = loadImage('crystalcaverns.jpg');
+  rainbowC = loadImage('rainbow-crystal-1.jpg');
+  lGlow = createVideo(['lightglow.mp4']);
+  lGlow.hide(); // hides video from playing outside of the Canvas
+  soundFormats('wav', 'mp3');
+  cSound = loadSound('crystalmusic.wav'); 
+}
 
 function setup() {
-  createCanvas(600, 500);
-  for(let j = 0; j <= 20; j++){
-    fishes.push(new fish());
-  }
+  createCanvas(400, 400);
+ reverb = new p5.Reverb();
+  cSound.disconnect();
+  reverb.process(cSound, 2,2);
 }
 
 function draw() {
-  background('#271CFF');
-  stroke('#3FFFF9');
-  bezier(0, 200, 200, 150, 400, 300, 600, 200);
-  fill('#EBD800');
-  stroke('#EBD800');
-  rect(0, 400, width, 100);
-  stroke('#EBBD27');
-  strokeWeight(8);
-  point(100, 420);
-  point(50, 430);
-  point(200, 480);
-  point(150, 410);
-  point(10, 402);
-  point(300, 450);
-  point(250, 440);
-  point(500, 401);
-  point(450, 440);
-  for(let j = 0; j < fishes.length; j++){
-        fishes[j].display();
-  fishes[j].move();
-  }
+  background(220);
+  image(crystal,0,0);
+  crystal.resize(400,400);
+  image(rainbowC,100,250);
+  rainbowC.resize(150, 100);
+  image(lGlow, 130, 180, 80,80); //displays the lGlow video
+  let ripple = constrain(map(mouseX, 0, width, 0, 1), 0, 1);
+  reverb.drywet(ripple);
 }
 
-class fish {
-
-constructor(){                 //the main constructor for the fish class
-var pX, pY, pZ, y1, y2, y3,rColor;
-
-this.pX = round(random(0, 165));
-this.pY = round(random(0, 375));
-this.pZ = random(0, 40);
-this.y1= round(random(0, 400));
-this.y2 = round(random(0, 400));
-this.y3 = round(random(0, 400));
-this.rColor = color(random(255), random(255), random(255));
-}
-
-  display(){ //displays the fish in the water
-fill(this.rColor);
-triangle(this.pX, this.y1,this.pY, this.y2,this.pZ, this.y3);
-}
+function mousePressed(){
   
-move(){ //allows the fish to move in the water
-this.pX += random(-5,5);
-this.pY += random(-5,5);
-this.pZ += random(-5,5);
-}
+  lGlow.loop();
+  playSound();
 }
 
-
+function playSound(){
+  cSound.play(); //plays the crystal music sound effect.
+}
